@@ -156,6 +156,24 @@ elif selected_nav == "Visualizations":
 
 elif selected_nav == "Conclusion":
     st.write("### Conclusion")
-    st.write("Based on the visualizations, we can see that the distribution of exam scores varies by parental education level.")
-    st.write("There is a positive correlation between parental involvement and exam scores.")
-    st.write("Further analysis can be done to explore the impact of other factors on student performance.")
+    st.write("""
+    The dataset offers insights into factors affecting student performance. Key observations include:
+
+    1. **Central Tendency & Variability**:
+        - Students study an average of 20 hours per week, sleep 7 hours, and have 80% school attendance.
+        - High variability in Previous Scores, Tutoring Sessions, and Hours Studied; low variability in Sleep Hours and Exam Scores.
+
+    2. **Outliers & Skewness**:
+        - Outliers in Hours Studied, Attendance, Previous Scores, and Tutoring Sessions indicate extreme behaviors.
+        - Tutoring Sessions and Physical Activity are right-skewed, with most students engaging minimally.
+
+    3. **Correlations**:
+        - Strongest correlation between Exam Scores and Attendance (0.58).
+        - Hours Studied show a modest positive correlation with Exam Scores.
+        - Distance from Home has a weak negative correlation with Exam Scores.
+
+    **Next Steps**:
+    - Predictive Modeling: Use machine learning to predict performance.
+    - Investigate Categorical Variables: Analyze impact of Gender, School Type, and Parental Education Level.
+    - Identify Causal Relationships: Conduct controlled studies to understand direct impacts on academic success.
+    """)
