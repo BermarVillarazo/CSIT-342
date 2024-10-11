@@ -196,9 +196,4 @@ elif selected_nav == "Conclusion":
         - Strongest correlation between Exam Scores and Attendance (0.58).
         - Hours Studied show a modest positive correlation with Exam Scores.
         - Distance from Home has a weak negative correlation with Exam Scores.
-
-    **Next Steps**:
-    - Predictive Modeling: Use machine learning to predict performance.
-    - Investigate Categorical Variables: Analyze impact of Gender, School Type, and Parental Education Level.
-    - Identify Causal Relationships: Conduct controlled studies to understand direct impacts on academic success.
     """)
