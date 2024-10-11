@@ -11,24 +11,23 @@ import plotly.graph_objects as go
 # Load data
 df = pd.read_csv("archive/StudentPerformanceFactors.csv")
 
-categorical_columns = {
-    'Parental_Involvement': {'Low': 1, 'Medium': 2, 'High': 3},
-    'Access_to_Resources': {'Low': 1, 'Medium': 2, 'High': 3},
-    'Extracurricular_Activities': {'Yes': 1, 'No': 0},
-    'Motivation_Level': {'Low': 1, 'Medium': 2, 'High': 3},
-    'Internet_Access': {'Yes': 1, 'No': 0},
-    'Family_Income': {'Low': 1, 'Medium': 2, 'High': 3},
-    'Teacher_Quality': {'Low': 1, 'Medium': 2, 'High': 3},
-    'School_Type': {'Public': 1, 'Private': 2},
-    'Peer_Influence': {'Negative': 0, 'Neutral': 1, 'Positive': 2},
-    'Learning_Disabilities': {'Yes': 1, 'No': 0},
-    'Parental_Education_Level': {'High School': 1, 'College': 2, 'Postgraduate': 3},
-    'Distance_from_Home': {'Near': 1, 'Moderate': 2, 'Far': 3},
-    'Gender': {'Male': 1, 'Female': 2}
-}
-
 # Function to convert categorical variables to numeric
 def convert_categorical_to_numeric(df):
+    categorical_columns = {
+        'Parental_Involvement': {'Low': 1, 'Medium': 2, 'High': 3},
+        'Access_to_Resources': {'Low': 1, 'Medium': 2, 'High': 3},
+        'Extracurricular_Activities': {'Yes': 1, 'No': 0},
+        'Motivation_Level': {'Low': 1, 'Medium': 2, 'High': 3},
+        'Internet_Access': {'Yes': 1, 'No': 0},
+        'Family_Income': {'Low': 1, 'Medium': 2, 'High': 3},
+        'Teacher_Quality': {'Low': 1, 'Medium': 2, 'High': 3},
+        'School_Type': {'Public': 1, 'Private': 2},
+        'Peer_Influence': {'Negative': 0, 'Neutral': 1, 'Positive': 2},
+        'Learning_Disabilities': {'Yes': 1, 'No': 0},
+        'Parental_Education_Level': {'High School': 1, 'College': 2, 'Postgraduate': 3},
+        'Distance_from_Home': {'Near': 1, 'Moderate': 2, 'Far': 3},
+        'Gender': {'Male': 1, 'Female': 2}
+    }
 
     for column, mapping in categorical_columns.items():
         df[column] = df[column].map(mapping)
@@ -86,6 +85,22 @@ def plot_histogram(df, column):
     st.write(f"### Histogram for {column}")
     st.write(f"This histogram shows the distribution of values for the selected column.")
     
+    categorical_columns = {
+        'Parental_Involvement': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Access_to_Resources': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Extracurricular_Activities': {1: 'Yes', 0: 'No'},
+        'Motivation_Level': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Internet_Access': {1: 'Yes', 0: 'No'},
+        'Family_Income': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Teacher_Quality': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'School_Type': {1: 'Public', 2: 'Private'},
+        'Peer_Influence': {0: 'Negative', 1: 'Neutral', 2: 'Positive'},
+        'Learning_Disabilities': {1: 'Yes', 0: 'No'},
+        'Parental_Education_Level': {1: 'High School', 2: 'College', 3: 'Postgraduate'},
+        'Distance_from_Home': {1: 'Near', 2: 'Moderate', 3: 'Far'},
+        'Gender': {1: 'Male', 2: 'Female'}
+    }
+
     if column in categorical_columns:
         df[column] = df[column].map(categorical_columns[column])
     
