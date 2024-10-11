@@ -119,9 +119,15 @@ selected_nav = option_menu(None, ["Introduction", "Visualizations", "Conclusion"
 
 if selected_nav == "Introduction":
     st.write("### Introduction")
-    st.write("This dataset contains information about student performance factors.")
+    st.write("This dataset offers an extensive summary of different elements impacting student exam performance. It encompasses details on study routines, attendance, parental engagement, and other factors contributing to academic excellence.")
     st.write("The dataset includes the following columns:")
+    st.write(df.sample(5))
+
+    st.write("### Descriptive Statistics")
     st.write(descriptive_stats(df))
+
+    st.write("##### Presented by Teletubbies of CSIT342-G1")
+    st.write("- Aguinaldo, Rovelyn\n- Borres, Joshua\n- Tampus, Nathaniel\n- Villarazo, Bermar\n- Visbal, Andrhey")
 
 elif selected_nav == "Visualizations":
 
