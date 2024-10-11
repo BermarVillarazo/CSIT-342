@@ -84,6 +84,7 @@ def descriptive_stats(df):
 
 def plot_histogram(df, column):
     st.write(f"### Histogram for {column}")
+    st.write(f"This histogram shows the distribution of values for the selected column.")
     
     if column in categorical_columns:
         df[column] = df[column].map(categorical_columns[column])
@@ -93,11 +94,14 @@ def plot_histogram(df, column):
 
 def plot_boxplot(df, column):
     st.write(f"### Box Plot for {column}")
+    st.write(f"This box plot visualizes the spread and outliers of the selected column.")
     fig = px.box(df, y=column)
     st.plotly_chart(fig)
+    
 
 def plot_correlation_matrix(df):
     st.write("### Correlation Matrix Heatmap")
+    st.write("This heatmap displays the correlation coefficients between all columns.")
     numerical_data = df.select_dtypes(include=[np.number])
     corr_matrix = numerical_data.corr()
 
