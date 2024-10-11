@@ -1,11 +1,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import scipy.stats as stats
-import matplotlib.pyplot as plt
-import seaborn as sns
-import math
 from streamlit_option_menu import option_menu
+import plotly.express as px
+import plotly.graph_objects as go
+
 
 
 
@@ -83,76 +82,39 @@ def descriptive_stats(df):
     return stats_df
 
 
-# Visualization functions
 def plot_histogram(df, column):
     st.write(f"### Histogram for {column}")
-    fig, ax = plt.subplots()
-    df[column].hist(ax=ax, bins=10)
-    st.pyplot(fig)
-
+    fig = px.histogram(df, x=column, nbins=10)
+    st.plotly_chart(fig)
 
 def plot_boxplot(df, column):
     st.write(f"### Box Plot for {column}")
-    fig, ax = plt.subplots()
-    sns.boxplot(df[column], ax=ax)
-    st.pyplot(fig)
-
+    fig = px.box(df, y=column)
+    st.plotly_chart(fig)
 
 def plot_correlation_matrix(df):
     st.write("### Correlation Matrix Heatmap")
     numerical_data = df.select_dtypes(include=[np.number])
     corr_matrix = numerical_data.corr()
 
-    fig, ax = plt.subplots(figsize=(10, 8))
-    sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", linewidths=0.5, ax=ax)
-    st.pyplot(fig)
-
+    fig = go.Figure(data=go.Heatmap(
+        z=corr_matrix.values,
+        x=corr_matrix.columns,
+        y=corr_matrix.columns,
+        colorscale='Viridis'
+    ))
+    fig.update_layout(width=800, height=600)
+    st.plotly_chart(fig)
 
 def plot_exam_score_by_parental_education(df):
     st.write("### Distribution of Exam Scores by Parental Education Level")
-    fig, ax = plt.subplots(figsize=(14, 8))
-    sns.violinplot(
-        data=df, x="Parental_Education_Level", y="Exam_Score", palette="Set3", ax=ax
-    )
-    plt.xticks(rotation=45)
-    st.pyplot(fig)
+    fig = px.violin(df, x="Parental_Education_Level", y="Exam_Score", box=True, points="all")
+    st.plotly_chart(fig)
 
 
 # Interactive Streamlit App
 st.title("Student Performance Analysis")
 
-# # Show descriptive stats
-# if st.sidebar.checkbox("Show Descriptive Statistics"):
-#     stats_summary = descriptive_stats(df)
-#     st.write("### Basic Descriptive Statistics")
-#     st.write(stats_summary)
-
-# # Plot Histogram
-# if st.sidebar.checkbox("Plot Histogram"):
-#     numerical_columns = df.select_dtypes(include=[np.number]).columns.tolist()
-#     selected_column = st.sidebar.selectbox(
-#         "Select a column for Histogram", numerical_columns
-#     )
-#     plot_histogram(df, selected_column)
-
-# # Plot Boxplot
-# if st.sidebar.checkbox("Plot Boxplot"):
-#     numerical_columns = df.select_dtypes(include=[np.number]).columns.tolist()
-#     selected_column = st.sidebar.selectbox(
-#         "Select a column for Boxplot", numerical_columns
-#     )
-#     plot_boxplot(df, selected_column)
-
-# # Plot Correlation Matrix
-# if st.sidebar.checkbox("Plot Correlation Matrix"):
-#     plot_correlation_matrix(df)
-
-# # Plot Exam Score by Parental Education
-# if st.sidebar.checkbox("Plot Exam Score by Parental Education Level"):
-#     plot_exam_score_by_parental_education(df)
-
-
-# intro, visualizations, conclusion = st.tabs(["Introduction", "Visualizations", "Conclusion"])
 selected_nav = option_menu(None, ["Introduction", "Visualizations", "Conclusion"], icons=['house', 'graph-up', 'three-dots'], menu_icon="cast", default_index=0, orientation="horizontal")
 
 if selected_nav == "Introduction":
