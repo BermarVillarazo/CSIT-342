@@ -131,7 +131,7 @@ if selected_nav == "Introduction":
 
 elif selected_nav == "Visualizations":
 
-    histogram, boxplot, correlation_matrix, exam_score_by_parental_education = st.tabs(["Histogram", "Boxplot", "Correlation Matrix", "Exam Score by Parental Education"])
+    histogram, boxplot, correlation_matrix = st.tabs(["Histogram", "Boxplot", "Correlation Matrix"])
 
     with histogram:
         numerical_columns = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -151,8 +151,8 @@ elif selected_nav == "Visualizations":
 
     with correlation_matrix:
         plot_correlation_matrix(df)
-    with exam_score_by_parental_education:
-        plot_exam_score_by_parental_education(df)
+    # with exam_score_by_parental_education:
+    #     plot_exam_score_by_parental_education(df)
 
 elif selected_nav == "Conclusion":
     st.write("### Conclusion")
