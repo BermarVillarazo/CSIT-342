@@ -84,6 +84,27 @@ def descriptive_stats(df):
 
 def plot_histogram(df, column):
     st.write(f"### Histogram for {column}")
+    
+    # Check if the column is one of the categorical columns
+    categorical_columns = {
+        'Parental_Involvement': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Access_to_Resources': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Extracurricular_Activities': {1: 'Yes', 0: 'No'},
+        'Motivation_Level': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Internet_Access': {1: 'Yes', 0: 'No'},
+        'Family_Income': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'Teacher_Quality': {1: 'Low', 2: 'Medium', 3: 'High'},
+        'School_Type': {1: 'Public', 2: 'Private'},
+        'Peer_Influence': {0: 'Negative', 1: 'Neutral', 2: 'Positive'},
+        'Learning_Disabilities': {1: 'Yes', 0: 'No'},
+        'Parental_Education_Level': {1: 'High School', 2: 'College', 3: 'Postgraduate'},
+        'Distance_from_Home': {1: 'Near', 2: 'Moderate', 3: 'Far'},
+        'Gender': {1: 'Male', 2: 'Female'}
+    }
+    
+    if column in categorical_columns:
+        df[column] = df[column].map(categorical_columns[column])
+    
     fig = px.histogram(df, x=column, nbins=10)
     st.plotly_chart(fig)
 
