@@ -101,10 +101,12 @@ def plot_histogram(df, column):
         'Gender': {1: 'Male', 2: 'Female'}
     }
 
+    df_show = df.copy()
+
     if column in categorical_columns:
-        df[column] = df[column].map(categorical_columns[column])
+        df_show[column] = df_show[column].map(categorical_columns[column])
     
-    fig = px.histogram(df, x=column, nbins=10)
+    fig = px.histogram(df_show, x=column, nbins=10)
     st.plotly_chart(fig)
 
 def plot_boxplot(df, column):
