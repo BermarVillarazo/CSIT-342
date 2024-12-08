@@ -86,6 +86,7 @@ if selected_nav == "Overview":
         "- Aguinaldo, Rovelyn\n- Borres, Joshua\n- Tampus, Nathaniel\n- Villarazo, Bermar\n- Visbal, Andrhey"
     )
 
+
 elif selected_nav == "Data Exploration":
     st.title("Data Exploration and Preparation TODO KUWANG PA")
     st.markdown("### Dataset Overview")
@@ -99,9 +100,11 @@ elif selected_nav == "Data Exploration":
     # fig_box = px.box(df, x="Country", y="UnitPrice", title="Unit Price by Country")
     # st.plotly_chart(fig_box)
 
+
 elif selected_nav == "Analysis & Insights":
     st.title("Analysis & Insights")
     st.write("todo")
+
 
 elif selected_nav == "Conclusion":
     st.title("Conclusion")
