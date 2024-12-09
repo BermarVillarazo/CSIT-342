@@ -116,9 +116,28 @@ with st.sidebar:
 if selected == "Overview":
     st.write("### Overview TODO KUWANG/SAYOP PA GURO NI")
     st.write(
-        "This Ecommerce dataset contains all the transactions occurring for a UK-based and registered non-store online retail between 01/12/2009 and 09/12/2011.The company mainly sells unique all-occasion gift-ware. Many customers of the company are wholesalers."
+        "The e-commerce dataset used in this project contains transactional data from a UK-based online retail store spanning December 2009 to December 2011. The company specializes in selling unique, all-occasion giftware, catering to both individual customers and wholesalers. This rich dataset provides valuable insights into sales performance, customer behavior, and product trends, making it ideal for exploratory analysis and actionable insights."
     )
-    st.write("The dataset includes the following columns:")
+    st.write("##### Research Question")
+    st.write(
+        "What are the key customer segments in this e-commerce business, and how can these segments, combined with predictive modeling, guide targeted marketing strategies?"
+    )
+
+    st.markdown("""
+    **Research Focus**:
+    This study aims to uncover customer behaviors and purchase patterns to optimize marketing efforts, enhance customer satisfaction, and drive sales growth. By identifying distinct customer segments, the analysis provides actionable insights to inform targeted marketing strategies, personalized recommendations, and efficient inventory management.
+    """)
+
+    st.write("##### Selected Analysis Techniques")
+    st.write(
+    """
+    - ***K-means Clustering***: Applied to segment customers based on purchasing frequency, quantity, and spending trends. This technique helps in identifying distinct groups with similar behaviors, enabling personalized marketing strategies and targeted promotions.
+
+    - ***Linear Regression***: Used to model and predict purchasing patterns within these segments. This technique forecasts customer behavior such as future spending and purchase frequency, allowing businesses to tailor marketing strategies and optimize inventory effectively.
+    """
+    )
+
+    st.write("**The dataset includes the following columns:**")
     st.write(df.sample(5))
 
     st.write("### Descriptive Statistics")
