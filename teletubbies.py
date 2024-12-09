@@ -4,6 +4,13 @@ import numpy as np
 from streamlit_option_menu import option_menu
 import plotly.express as px
 import plotly.graph_objects as go
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import seaborn as sns
 
 # Load data
 df = pd.read_csv("archive/data-2.csv")
@@ -120,7 +127,7 @@ if selected == "Overview":
     )
 
 # default cleaned data
-if st.session_state.get("df_cleaned") is "fill":
+if st.session_state.get("df_cleaned") == "fill":
     df_cleaned = df.fillna(0)
 else:
     df_cleaned = df.dropna()
@@ -184,7 +191,7 @@ if selected == "Data Exploration":
         action = st.radio(
             "Select an action for handling missing values:",
             ["Drop rows with missing values", "Fill missing values with zero"],
-            index=1 if st.session_state.get("df_cleaned") is "fill" else 0,
+            index=1 if st.session_state.get("df_cleaned") == "fill" else 0,
             horizontal=True
         )
 
@@ -315,9 +322,73 @@ if selected == "Data Exploration":
 
 elif selected == "Analysis & Insights":
     st.title("Analysis & Insights")
-    # write the count of df_cleaned rows
-    st.write(f"rows: {df_cleaned.shape[0]}")
-    st.write("todo")
+
+    # Section 1: Customer Clustering
+    st.markdown("## 🤝 Customer Segmentation Using K-Means Clustering")
+    st.write("""
+    In this section, we use K-Means clustering to segment customers based on their purchasing behavior. 
+    This helps identify distinct groups of customers, such as frequent buyers, high spenders, or one-time buyers.
+    """)
+
+    # Step 1: Prepare data for clustering
+    customer_data = df_cleaned.groupby("CustomerID").agg(
+        total_quantity=("Quantity", "sum"),
+        total_revenue=("UnitPrice", lambda x: (x * df_cleaned["Quantity"]).sum()),
+        avg_unit_price=("UnitPrice", "mean")
+    ).dropna()
+
+    # Step 2: Standardize the data
+    scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(customer_data)
+
+    # Step 3: Determine optimal clusters using Elbow Method
+    inertia = []
+    for k in range(1, 11):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(scaled_data)
+        inertia.append(kmeans.inertia_)
+
+    # Plot Elbow Method
+    fig_elbow = px.line(
+        x=range(1, 11),
+        y=inertia,
+        title="Elbow Method for Optimal Number of Clusters",
+        labels={"x": "Number of Clusters (k)", "y": "Inertia"},
+        template="plotly_white"
+    )
+    st.plotly_chart(fig_elbow, use_container_width=True)
+
+    # Step 4: Apply K-Means with optimal k (e.g., k=3)
+    optimal_k = 3  # Adjust based on Elbow Method
+    kmeans = KMeans(n_clusters=optimal_k, random_state=42)
+    customer_data["Cluster"] = kmeans.fit_predict(scaled_data)
+
+    # Visualize Clusters
+    fig_clusters = px.scatter(
+        customer_data,
+        x="total_quantity",
+        y="total_revenue",
+        color=customer_data["Cluster"].astype(str),
+        title="Customer Clusters: Total Quantity vs. Total Revenue",
+        labels={"Cluster": "Cluster"},
+        template="plotly_white"
+    )
+    st.plotly_chart(fig_clusters, use_container_width=True)
+
+    # Cluster Insights
+    st.markdown("### 📌 Insights")
+    cluster_summary = customer_data.groupby("Cluster").agg(
+        avg_quantity=("total_quantity", "mean"),
+        avg_revenue=("total_revenue", "mean"),
+        avg_price=("avg_unit_price", "mean")
+    )
+    st.write(cluster_summary)
+
+    st.write("""
+    - Cluster **0** represents [e.g., low-spending customers].
+    - Cluster **1** represents [e.g., high-value customers who make large purchases].
+    - Cluster **2** represents [e.g., occasional buyers with moderate spending].
+    """)
 
 
 elif selected == "Conclusion":
