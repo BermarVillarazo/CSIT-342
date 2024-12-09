@@ -155,9 +155,11 @@ if selected_nav == "Data Exploration":
     st.markdown("### 🔍 Missing Values Analysis")
     st.write(
         """
-        Missing values can significantly impact the quality of our analysis. Identifying and addressing these 
-        gaps ensures that our insights are accurate and reliable. Here, we analyze the presence of missing 
-        values in the dataset.
+        Upon inspection, we found that the **Description** column has 1,454 missing values, while the **CustomerID** column has 135,080 missing values. The large number of missing values in the **CustomerID** column may affect the analysis of customer-related insights, as this column plays a key role in identifying individual transactions. 
+
+        Depending on the context and analysis goals, missing values can be handled in various ways:
+        - **Dropping rows** with missing values when the data is crucial.
+        - **Filling missing values** with placeholders, like "No Description" for missing **Description** values, or using "Unknown" for missing **CustomerID** values to retain the dataset size and prevent loss of data.
         """
     )
     missing_values = df.isnull().sum()
