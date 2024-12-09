@@ -119,13 +119,11 @@ if selected == "Overview":
         "- Aguinaldo, Rovelyn\n- Borres, Joshua\n- Tampus, Nathaniel\n- Villarazo, Bermar\n- Visbal, Andrhey"
     )
 
-
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-# Load data
-df = pd.read_csv("archive/data-2.csv")
+# default cleaned data
+if st.session_state.get("df_cleaned") is "fill":
+    df_cleaned = df.fillna(0)
+else:
+    df_cleaned = df.dropna()
 
 # Data Exploration
 if selected == "Data Exploration":
@@ -186,6 +184,7 @@ if selected == "Data Exploration":
         action = st.radio(
             "Select an action for handling missing values:",
             ["Drop rows with missing values", "Fill missing values with zero"],
+            index=1 if st.session_state.df_cleaned == "fill" else 0,
             horizontal=True
         )
 
@@ -201,12 +200,16 @@ if selected == "Data Exploration":
         
         if action == "Drop rows with missing values":
             df_cleaned = df.dropna()
+            st.session_state.df_cleaned = "drop"
+
             st.code(drop_rows_code, language='python')
             st.success(
                 f"✅ Rows after dropping missing values: {df_cleaned.shape[0]} (from {df.shape[0]} rows originally)."
             )
         elif action == "Fill missing values with zero":
             df_cleaned = df.fillna(0)
+            st.session_state.df_cleaned = "fill"
+
             st.code(fill_zero_code, language='python')
             st.success("✅ Missing values have been filled with zero.")
 
@@ -312,6 +315,8 @@ if selected == "Data Exploration":
 
 elif selected == "Analysis & Insights":
     st.title("Analysis & Insights")
+    # write the count of df_cleaned rows
+    st.write(f"rows: {df_cleaned.shape[0]}")
     st.write("todo")
 
 
