@@ -184,7 +184,7 @@ if selected == "Data Exploration":
         action = st.radio(
             "Select an action for handling missing values:",
             ["Drop rows with missing values", "Fill missing values with zero"],
-            index=1 if st.session_state.df_cleaned == "fill" else 0,
+            index=1 if st.session_state.get("df_cleaned") is "fill" else 0,
             horizontal=True
         )
 
