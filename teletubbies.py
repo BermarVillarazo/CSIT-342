@@ -11,6 +11,9 @@ import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import cross_val_score, KFold
+from sklearn.metrics import mean_squared_error, make_scorer
 
 # Load data
 df = pd.read_csv("archive/data-2.csv")
@@ -323,72 +326,127 @@ if selected == "Data Exploration":
 elif selected == "Analysis & Insights":
     st.title("Analysis & Insights")
 
-    # Section 1: Customer Clustering
-    st.markdown("## 🤝 Customer Segmentation Using K-Means Clustering")
-    st.write("""
-    In this section, we use K-Means clustering to segment customers based on their purchasing behavior. 
-    This helps identify distinct groups of customers, such as frequent buyers, high spenders, or one-time buyers.
-    """)
+    # Create tabs for K-Means and Linear Regression
+    tab1, tab2 = st.tabs(["📊 K-Means Clustering", "📈 Linear Regression"])
 
-    # Step 1: Prepare data for clustering
-    customer_data = df_cleaned.groupby("CustomerID").agg(
-        total_quantity=("Quantity", "sum"),
-        total_revenue=("UnitPrice", lambda x: (x * df_cleaned["Quantity"]).sum()),
-        avg_unit_price=("UnitPrice", "mean")
-    ).dropna()
+    # --- Tab 1: K-Means Clustering ---
+    with tab1:
+        st.markdown("## 🤝 Customer Segmentation Using K-Means Clustering")
+        st.write("""
+        In this section, we use K-Means clustering to segment customers based on their purchasing behavior. 
+        This helps identify distinct groups of customers, such as frequent buyers, high spenders, or one-time buyers.
+        """)
 
-    # Step 2: Standardize the data
-    scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(customer_data)
+        # Step 1: Prepare data for clustering
+        customer_data = df_cleaned.groupby("CustomerID").agg(
+            total_quantity=("Quantity", "sum"),
+            total_revenue=("UnitPrice", lambda x: (x * df_cleaned["Quantity"]).sum()),
+            avg_unit_price=("UnitPrice", "mean")
+        ).dropna()
 
-    # Step 3: Determine optimal clusters using Elbow Method
-    inertia = []
-    for k in range(1, 11):
-        kmeans = KMeans(n_clusters=k, random_state=42)
-        kmeans.fit(scaled_data)
-        inertia.append(kmeans.inertia_)
+        # Step 2: Standardize the data
+        scaler = StandardScaler()
+        scaled_data = scaler.fit_transform(customer_data)
 
-    # Plot Elbow Method
-    fig_elbow = px.line(
-        x=range(1, 11),
-        y=inertia,
-        title="Elbow Method for Optimal Number of Clusters",
-        labels={"x": "Number of Clusters (k)", "y": "Inertia"},
-        template="plotly_white"
-    )
-    st.plotly_chart(fig_elbow, use_container_width=True)
+        # Step 3: Determine optimal clusters using Elbow Method
+        inertia = []
+        for k in range(1, 11):
+            kmeans = KMeans(n_clusters=k, random_state=42)
+            kmeans.fit(scaled_data)
+            inertia.append(kmeans.inertia_)
 
-    # Step 4: Apply K-Means with optimal k (e.g., k=3)
-    optimal_k = 3  # Adjust based on Elbow Method
-    kmeans = KMeans(n_clusters=optimal_k, random_state=42)
-    customer_data["Cluster"] = kmeans.fit_predict(scaled_data)
+        # Plot Elbow Method
+        fig_elbow = px.line(
+            x=range(1, 11),
+            y=inertia,
+            title="Elbow Method for Optimal Number of Clusters",
+            labels={"x": "Number of Clusters (k)", "y": "Inertia"},
+            template="plotly_white"
+        )
+        st.plotly_chart(fig_elbow, use_container_width=True)
 
-    # Visualize Clusters
-    fig_clusters = px.scatter(
-        customer_data,
-        x="total_quantity",
-        y="total_revenue",
-        color=customer_data["Cluster"].astype(str),
-        title="Customer Clusters: Total Quantity vs. Total Revenue",
-        labels={"Cluster": "Cluster"},
-        template="plotly_white"
-    )
-    st.plotly_chart(fig_clusters, use_container_width=True)
+        # Step 4: Apply K-Means with optimal k (e.g., k=3)
+        optimal_k = 3  # Adjust based on Elbow Method
+        kmeans = KMeans(n_clusters=optimal_k, random_state=42)
+        customer_data["Cluster"] = kmeans.fit_predict(scaled_data)
 
-    # Cluster Insights
-    st.markdown("### 📌 Insights")
-    cluster_summary = customer_data.groupby("Cluster").agg(
-        avg_quantity=("total_quantity", "mean"),
-        avg_revenue=("total_revenue", "mean"),
-        avg_price=("avg_unit_price", "mean")
-    )
-    st.write(cluster_summary)
+        # Visualize Clusters
+        fig_clusters = px.scatter(
+            customer_data,
+            x="total_quantity",
+            y="total_revenue",
+            color=customer_data["Cluster"].astype(str),
+            title="Customer Clusters: Total Quantity vs. Total Revenue",
+            labels={"Cluster": "Cluster"},
+            template="plotly_white"
+        )
+        st.plotly_chart(fig_clusters, use_container_width=True)
 
-    st.write("""
-    - Cluster **0** represents [e.g., low-spending customers].
-    - Cluster **1** represents [e.g., high-value customers who make large purchases].
-    - Cluster **2** represents [e.g., occasional buyers with moderate spending].
-    """)
+        # Cluster Insights
+        st.markdown("### 📌 Insights")
+        cluster_summary = customer_data.groupby("Cluster").agg(
+            avg_quantity=("total_quantity", "mean"),
+            avg_revenue=("total_revenue", "mean"),
+            avg_price=("avg_unit_price", "mean")
+        )
+        st.write(cluster_summary)
+
+    # --- Tab 2: Linear Regression ---
+    with tab2:
+        st.markdown("## 📈 Linear Regression Analysis")
+        st.write("""
+        In this section, we apply linear regression to model and predict purchasing behavior.
+        """)
+
+        # Prepare data for Linear Regression
+        X = df_cleaned[["Quantity", "UnitPrice"]]  # Predictor variables
+        y = df_cleaned["Quantity"]  # Target variable
+
+        # Split data into training and test sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Fit Linear Regression model
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+
+        # Predict on the test set
+        y_pred = model.predict(X_test)
+
+        # Evaluate the model
+        mse = mean_squared_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+
+        st.write(f"Mean Squared Error: {mse:.2f}")
+        st.write(f"R-squared: {r2:.2f}")
+
+        # Scatter plot of actual vs predicted values
+        fig_regression = px.scatter(
+            x=y_test,
+            y=y_pred,
+            labels={"x": "Actual Values", "y": "Predicted Values"},
+            title="Actual vs Predicted Values (Linear Regression)",
+            template="plotly_white"
+        )
+        st.plotly_chart(fig_regression, use_container_width=True)
+
+        # Perform cross-validation
+        kf = KFold(n_splits=5, shuffle=True, random_state=42)
+        mse_scores = cross_val_score(model, X, y, cv=kf, scoring=make_scorer(mean_squared_error))
+        r2_scores = cross_val_score(model, X, y, cv=kf, scoring='r2')
+
+        st.write(f"Average MSE: {np.mean(mse_scores):.4f}")
+        st.write(f"Average R²: {np.mean(r2_scores):.4f}")
+
+        # Residual Plot
+        residuals = y_test - y_pred
+        fig, ax = plt.subplots()
+        ax.scatter(y_test, residuals, alpha=0.6)
+        ax.axhline(y=0, color='red', linestyle='--')
+        ax.set_xlabel("Actual Values")
+        ax.set_ylabel("Residuals")
+        ax.set_title("Residual Plot")
+        st.pyplot(fig)
+
 
 
 elif selected == "Conclusion":
