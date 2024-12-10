@@ -356,6 +356,8 @@ elif selected == "Analysis & Insights":
         This helps identify distinct groups of customers, such as frequent buyers, high spenders, or one-time buyers.
         """)
 
+        df_cleaned = df_cleaned[:20000]
+
         # Step 1: Prepare data for clustering
         customer_data = df_cleaned.groupby("CustomerID").agg(
             total_quantity=("Quantity", "sum"),
