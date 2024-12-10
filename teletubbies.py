@@ -3,17 +3,12 @@ import pandas as pd
 import numpy as np
 from streamlit_option_menu import option_menu
 import plotly.express as px
-import plotly.graph_objects as go
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
-import numpy as np
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.metrics import mean_squared_error, r2_score, make_scorer
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.model_selection import cross_val_score, KFold
-from sklearn.metrics import mean_squared_error, make_scorer
 
 # Load data
 df = pd.read_csv("archive/data-2.csv")
