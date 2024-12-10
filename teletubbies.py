@@ -341,7 +341,7 @@ if selected == "Data Exploration":
         # fig_box = px.box(df, x="Country", y="UnitPrice", title="Unit Price by Country")
         # st.plotly_chart(fig_box)
 
-
+# tab navigation
 elif selected == "Analysis & Insights":
     st.title("Analysis & Insights")
 
@@ -472,7 +472,45 @@ elif selected == "Analysis & Insights":
 
 elif selected == "Conclusion":
     st.title("Conclusion")
-    st.write("todo")
+
+    st.write(
+        """
+        In this report, we analyzed an **Ecommerce dataset** to understand customer behavior and purchasing patterns. 
+        After a detailed data exploration phase, we used advanced techniques such as **K-Means clustering** and **linear regression** 
+        to derive insights and build predictive models.
+        """
+    )
+
+    st.markdown("### 🔍 Key Takeaways:")
+    st.write(
+        """
+        - **K-Means Clustering Results:** 
+            - We identified three distinct customer segments:
+                1. **Average Buyers:** Moderate purchases with steady contributions to sales.
+                2. **High Spenders:** Bulk or frequent buyers driving the majority of revenue.
+                3. **One-Time Buyers:** Customers making single, often high-value purchases.
+            - These clusters reveal opportunities for targeted marketing and customer engagement, 
+              particularly focusing on loyalty programs for high spenders and promotional strategies for average and one-time buyers.
+        """
+    )
+
+    st.write(
+        """
+        - **Linear Regression Results:** 
+            - Our regression model yielded unrealistic metrics (MSE=0.00, R²=1.00), 
+              likely due to overfitting or data issues such as leakage.
+            - While it was not suitable for predictions, this highlighted the importance of 
+              robust data preparation and validation for future modeling efforts.
+        """
+    )
+
+    st.write(
+        """
+        Overall, the analysis highlights the value of clustering for actionable insights and the need for careful modeling practices. 
+        These findings provide a strong foundation for improving customer engagement, retention, and revenue growth.
+        """
+    )
+
     st.write("##### Presented by Teletubbies of CSIT342-G1")
     st.write(
         "- Aguinaldo, Rovelyn\n- Borres, Joshua\n- Tampus, Nathaniel\n- Villarazo, Bermar\n- Visbal, Andrhey"
