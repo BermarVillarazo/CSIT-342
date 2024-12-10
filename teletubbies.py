@@ -114,7 +114,7 @@ with st.sidebar:
 
 
 if selected == "Overview":
-    st.write("### Overview TODO KUWANG/SAYOP PA GURO NI")
+    st.write("### Overview")
     st.write(
         "The e-commerce dataset used in this project contains transactional data from a UK-based online retail store spanning December 2009 to December 2011. The company specializes in selling unique, all-occasion giftware, catering to both individual customers and wholesalers. This rich dataset provides valuable insights into sales performance, customer behavior, and product trends, making it ideal for exploratory analysis and actionable insights."
     )
